@@ -6,8 +6,8 @@ import java.util.Map;
 public class Homework {
     public static Boolean findSQL(SqlConn sql, String newAddr, int j, int idx){
         List<Object> result;
-        result = sql.selectAddress(newAddr.substring(j, idx));
-        if(!result.isEmpty()){
+        result = sql.selectAddress(newAddr.substring(j, idx)); //전체 문자열에서 j부터 idx까지에 대한 문자열을 탐색 시도
+        if(!result.isEmpty()){ //정확히 일치하는 결과값이 존재한다면
             System.out.println(result);
             Map<String, String> temp = findRegion(result, newAddr.substring(0, j));
             if(temp == null){
@@ -23,20 +23,20 @@ public class Homework {
     public static String safeGet(String s) {
         return s == null ? "" : s;
     }
-    public static ArrayList<Integer> findIdx(String addr){
-        ArrayList<Integer> result = new ArrayList<Integer>();
+    public static ArrayList<Integer> findIdx(String addr){ //로, 길에 해당하는 index 찾기, 가장 뒤에 있는 글자 부터 찾기시작
+        ArrayList<Integer> result = new ArrayList<>();
         while(addr.length() != 0){
             int roLastIdx = addr.lastIndexOf("로");
             int gilLastIdx = addr.lastIndexOf("길");
-            if(roLastIdx > gilLastIdx) {
+            if(roLastIdx > gilLastIdx) { //로가 뒤에 있으면 roLastIdx를 추가하고 로 앞까지 문자열 자르기
                 result.add(roLastIdx);
                 addr = addr.substring(0, roLastIdx);
             }
-            else if(roLastIdx < gilLastIdx){
+            else if(roLastIdx < gilLastIdx){ //길이 뒤에 있으면 gilLastIdx를 추가하고 길 앞까지 문자열 자르기
                 result.add(gilLastIdx);
                 addr = addr.substring(0, gilLastIdx);
             }
-            else{
+            else{ //만약 길과 로가 같이 있다면 문자열에 더이상 길, 로가 존재하지 않음
                 break;
             }
         }
@@ -49,33 +49,33 @@ public class Homework {
             //System.out.println(result);
             if(resultList.size() == 1)
                 break;
-            List<Object> tempList = new ArrayList<Object>(resultList);
-            //System.out.println(addr.substring(j, j+1)); => 한글자씩 파싱하여 기초자치단체 혹은 광역자치단체에 있는지 확인
+            List<Object> tempList = new ArrayList<>(resultList);
+            //System.out.println(addr.substring(j, j+1));
             for (Object o : resultList) {
                 Map<String, String> temp = (Map) o;
                 if (!temp.get("광역자치단체").contains(addr.substring(j, j + 1)) && !temp.get("기초자치단체").contains(addr.substring(j, j + 1))) {
+                    //=> 한글자씩 파싱하여 기초자치단체 혹은 광역자치단체에 글자가 없다면 결과리스트에서 제거
                     tempList.remove(temp);
                 }
             }
-            resultList = new ArrayList<Object>(tempList);
+            resultList = new ArrayList<>(tempList);
         }
         return resultList.isEmpty() ? null : (Map)resultList.get(0);
     }
-    public static void main(String args[]){
+    public static void main(String[] args){
         Scanner s = new Scanner(System.in);
-        final String dbURL = "jdbc:sqlite:address.db";
+        final String dbURL = "jdbc:sqlite:address.db"; //내재된 SQLite 사용
         SqlConn sql = new SqlConn(dbURL);
-        sql.setDbConn();
+        sql.setDbConn();   //DB 연결 수립
 
         System.out.println("주소를 입력해주세요");
-        String addr = s.nextLine();
+        String addr = s.nextLine(); //주소 입력 시작
 
-        String newAddr = addr.replaceAll("[^가-힣A-Za-z·\\d~\\.]", "");
-        newAddr = newAddr.toUpperCase();
+        String newAddr = addr.replaceAll("[^가-힣A-Za-z·\\d~.]", ""); //한글 낯자, . · 제외 특수문자 제거
+        newAddr = newAddr.toUpperCase(); //"APEC로" 검색을 위한 대문자화
         ArrayList<Integer> idxList = findIdx(newAddr);
         System.out.println(newAddr);
-        //System.out.println(findIdx(newAddr));
-        //System.out.println(idxList);
+
         for(int i = 0; i!= idxList.size(); i++){
             for(int j=0; j<idxList.get(i); j++){
                 System.out.println(newAddr.substring(j, idxList.get(i)+1));

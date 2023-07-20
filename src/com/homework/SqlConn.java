@@ -56,7 +56,6 @@ public class SqlConn {
         catch(SQLException e){
             e.printStackTrace();
         }
-
         return resultList;
     }
 
