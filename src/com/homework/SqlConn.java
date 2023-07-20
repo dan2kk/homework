@@ -15,7 +15,7 @@ public class SqlConn {
         try
         {
             dbConn = DriverManager.getConnection(url);
-            //System.out.println("DB Connection [성공]");
+            System.out.println("DB Connection [성공]");
         }
         catch (SQLException e)
         {
@@ -43,7 +43,7 @@ public class SqlConn {
         PreparedStatement st;
         List<Object> resultList = new ArrayList<>();
         try{
-            st = dbConn.prepareStatement("select * from Address where 도로명주소 = ?");
+            st = dbConn.prepareStatement("select * from Address_2023 where 도로명주소 = ?");
             st.setString(1, addr);
             ResultSet rs = st.executeQuery();
             while (rs.next()) {

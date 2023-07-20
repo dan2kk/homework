@@ -4,6 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 public class Homework {
+    public static String safeGet(String s){
+        if(s ==null){
+            return "";
+        }
+        else return s;
+    }
     public static ArrayList<Integer> findIdx(String addr){
         ArrayList<Integer> result = new ArrayList<Integer>();
         while(addr.length() != 0){
@@ -64,9 +70,8 @@ public class Homework {
          */
     }
     public static void main(String args[]){
-        Scanner s = new Scanner(System.in);
         final String dbURL = "jdbc:sqlite:address.db";
-
+        Scanner s = new Scanner(System.in);
         String addr = s.nextLine();
         String newAddr = addr.replaceAll("[^가-힣0-9]", "");
         ArrayList<Integer> idxList = findIdx(newAddr);
@@ -89,7 +94,7 @@ public class Homework {
                         sql.closeDbConn();
                         return;
                     }
-                    System.out.println(temp.get("광역자치단체")+" "+temp.get("기초자치단체")+" "+temp.get("도로명주소"));
+                    System.out.println(safeGet(temp.get("광역자치단체"))+" "+safeGet(temp.get("기초자치단체"))+" "+safeGet(temp.get("도로명주소")));
                     sql.closeDbConn();
                     return;
                 }
