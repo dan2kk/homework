@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.Map;
 public class Homework {
     public static Boolean findSQL(SqlConn sql, String newAddr, int j, int idx){
-        List<Object> result;
-        result = sql.selectAddress(newAddr.substring(j, idx)); //전체 문자열에서 j부터 idx까지에 대한 문자열을 탐색 시도
+        List<Map> result;
+        result = sql.selectAddress(newAddr.substring(j, idx)); //전체 문자열에서 j부터 idx까지 문자열을 탐색 시도
         if(!result.isEmpty()){ //정확히 일치하는 결과값이 존재한다면
-            System.out.println(result);
+            //System.out.println(result);
             Map<String, String> temp = findRegion(result, newAddr.substring(0, j));
             if(temp == null){
                 System.out.println("옳바르지 않은 주소 입니다.");
@@ -42,25 +42,25 @@ public class Homework {
         }
         return result;
     }
-    public static Map<String, String> findRegion(List<Object> resultList, String addr){
+    public static Map findRegion(List<Map> resultList, String addr){
         if(resultList.size() == 1)
-            return (Map)resultList.get(0);
+            return resultList.get(0);
         for(int j=addr.length()-1; j != -1; j--){
             //System.out.println(result);
             if(resultList.size() == 1)
                 break;
-            List<Object> tempList = new ArrayList<>(resultList);
+            List<Map> tempList = new ArrayList<>(resultList);
             //System.out.println(addr.substring(j, j+1));
             for (Object o : resultList) {
                 Map<String, String> temp = (Map) o;
                 if (!temp.get("광역자치단체").contains(addr.substring(j, j + 1)) && !temp.get("기초자치단체").contains(addr.substring(j, j + 1))) {
-                    //=> 한글자씩 파싱하여 기초자치단체 혹은 광역자치단체에 글자가 없다면 결과리스트에서 제거
+                    //=> 뒤에서 부터 한글자씩 파싱하여 기초자치단체 혹은 광역자치단체에 글자가 없다면 결과리스트에서 제거
                     tempList.remove(temp);
                 }
             }
             resultList = new ArrayList<>(tempList);
         }
-        return resultList.isEmpty() ? null : (Map)resultList.get(0);
+        return resultList.isEmpty() ? null : resultList.get(0);
     }
     public static void main(String[] args){
         Scanner s = new Scanner(System.in);
@@ -73,8 +73,8 @@ public class Homework {
 
         String newAddr = addr.replaceAll("[^가-힣A-Za-z·\\d~.]", ""); //한글 낯자, . · 제외 특수문자 제거
         newAddr = newAddr.toUpperCase(); //"APEC로" 검색을 위한 대문자화
-        ArrayList<Integer> idxList = findIdx(newAddr);
-        System.out.println(newAddr);
+        ArrayList<Integer> idxList = findIdx(newAddr); //로, 길에 대한 index 탐색
+        //System.out.println(newAddr);
 
         for(int i = 0; i!= idxList.size(); i++){
             for(int j=0; j<idxList.get(i); j++){

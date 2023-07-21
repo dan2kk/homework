@@ -39,9 +39,9 @@ public class SqlConn {
             e.printStackTrace();
         }
     }
-    public List<Object> selectAddress(String addr){
+    public List<Map> selectAddress(String addr){
         PreparedStatement st;
-        List<Object> resultList = new ArrayList<>();
+        List<Map> resultList = new ArrayList<>();
         try{
             st = dbConn.prepareStatement("select * from Address_2023 where 도로명주소 = ?");
             st.setString(1, addr);
